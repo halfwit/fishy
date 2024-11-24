@@ -306,9 +306,6 @@ ashita.events.register("d3d_present", "present_cb", function()
             end
             imgui.Text(k .. ': ' .. 'x' .. format_int(v) .. ' (' .. format_int(itemTotal) .. 'g)');
         end
-        imgui.Text("Total Profit:");
-        imgui.SameLine();
-        imgui.Text(string.gsub(fishing.profit, "^(-?%d+)(%d%d%d)", "%1,%2"));
         imgui.Separator();
         if ((ashita.time.clock()['s'] % 3) == 0) then
             if(elapsed_time > 300) then
