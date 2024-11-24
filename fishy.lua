@@ -112,6 +112,7 @@ ashita.events.register('command', 'command_cb', function(e)
     e.blocked = true;
     if (#args == 2 and args[2]:any('clear')) then
         fishing.settings.rewards = {};
+        fishing.settings.first_attempt = 0;
         return
     end
 end);
@@ -150,11 +151,14 @@ ashita.events.register("packet_in", "packet_in_cb", function(e)
     if e.id == 39 then -- Packet 39 contains the actual fish ID. It is only sent after the fish is caught
         local player = GetPlayerEntity()
         if (player ~= nil and player.TargetIndex == struct.unpack('H', e.data_modified, 0x08 + 0x01)) then
+            local id = tostring(struct.unpack("H", e.data_modified, 17))
+            local found = false;
             if (fishing.settings.first_attempt == 0) then
                 fishing.settings.first_attempt = ashita.time.clock()['ms'];
             end
-            local id = tostring(struct.unpack("H", e.data_modified, 17))
-            local found = false;
+            if (fishing.settings.visible[1] == false) then
+                fishing.settings.visible[1] = true;
+            end
             for key, v in pairs(data.FishIndex) do
                 if string.contains(id, key) then
                     -- add to rewards
@@ -245,6 +249,7 @@ local function render_editor()
         end
         if (imgui.Button('Clear Session')) then
             fishing.settings.rewards = {};
+            fishing.settings.first_attempt = 0;
             print(chat.header(addon.name):append(
                       chat.message('Cleared session.')));
         end
@@ -284,17 +289,20 @@ ashita.events.register("d3d_present", "present_cb", function()
                             ImGuiWindowFlags_NoNav))) then
 
         local moon = GetMoon();
+ 	local inventory = AshitaCore:GetMemoryManager():GetInventory();
+
         local total_worth = 0;
         local elapsed_time = ashita.time.clock()['s'] - math.floor(fishing.settings.first_attempt / 1000.0);
         imgui.Text('Fishing session');
         imgui.Separator();
         imgui.Text('Moon: ' .. moon.MoonPhase .. ' (' .. tostring(moon.MoonPhasePercent) .. '%)');
+        imgui.Text('Inventory: ' .. inventory:GetContainerCount(0) .. '/' .. inventory:GetContainerCountMax(0));
         imgui.Separator();
         for k, v in pairs(fishing.settings.rewards) do
             local itemTotal = 0;
             if(fishing.pricing[k] ~= nil) then
-                total_worth = total_worth + fishing.pricing[k] * v;
                 itemTotal = v * fishing.pricing[k];
+                total_worth = total_worth + itemTotal;
             end
             imgui.Text(k .. ': ' .. 'x' .. format_int(v) .. ' (' .. format_int(itemTotal) .. 'g)');
         end
@@ -303,10 +311,15 @@ ashita.events.register("d3d_present", "present_cb", function()
         imgui.Text(string.gsub(fishing.profit, "^(-?%d+)(%d%d%d)", "%1,%2"));
         imgui.Separator();
         if ((ashita.time.clock()['s'] % 3) == 0) then
-            fishing.gil_per_hour =
-            math.floor((total_worth / elapsed_time) * 3600);
+            if(elapsed_time > 300) then
+            	fishing.gil_per_hour = math.floor((total_worth / elapsed_time) * 3600);
+            end
         end
-        imgui.Text('Total Revenue: ' .. format_int(total_worth) .. 'g' .. ' (' .. format_int(fishing.gil_per_hour) .. ' gph)');
+        imgui.Text('Total Revenue: ' .. format_int(total_worth) .. 'g');
+        imgui.SameLine()
+        if (fishing.gil_per_hour > 0) then
+            imgui.Text(' (' .. format_int(fishing.gil_per_hour) .. ' gph)');
+        end
         imgui.End();
     end
     imgui.End();
