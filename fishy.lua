@@ -1,6 +1,6 @@
 addon.author  = "halfwit";
 addon.name    = "fishy";
-addon.version = "0.0.1";
+addon.version = "0.0.3";
 addon.desc    = "Displays fishing profit per hour";
 
 require("common");
@@ -307,7 +307,7 @@ ashita.events.register("d3d_present", "present_cb", function()
             imgui.Text(k .. ': ' .. 'x' .. format_int(v) .. ' (' .. format_int(itemTotal) .. 'g)');
         end
         imgui.Separator();
-        if ((ashita.time.clock()['s'] % 3) == 0) then
+        if ((ashita.time.clock()['s'] % 5) == 0) then
             if(elapsed_time > 300) then
             	fishing.gil_per_hour = math.floor((total_worth / elapsed_time) * 3600);
             end
