@@ -205,7 +205,10 @@ data.FishIndex = T {
         [90]   = "Rusty Bucket:50",
         [591]  = "Ripped Cap:0",
         [624]  = "Pantam Kelp:8",
+        [1210] = "Damp Scroll:0",
+        [4304] = "Grimmonite:717",
         [4314] = "Bibikibo:102",
+        [4361] = "Nebimonite:53",
         [4384] = "Black Sole:717",
         [4385] = "Zafmlug Bass:31",
         [4426] = "Tricolored Carp:53",
@@ -225,9 +228,6 @@ data.FishIndex = T {
         [14242] = "Rusty Subligar:16",
         [16451] = "Mithril Dagger:1431",
         [16655] = "Rusty Pick:115",
-	--[4360] = "Moat Carp:10",
-	--[4361] = "Forest Carp:11",
-	--[4362] = "Silver Carp:16",
 };
 
 return data
