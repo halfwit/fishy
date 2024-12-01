@@ -1,6 +1,6 @@
 addon.author  = "halfwit";
 addon.name    = "fishy";
-addon.version = "0.0.3";
+addon.version = "0.0.4";
 addon.desc    = "Displays fishing profit per hour";
 
 require("common");
