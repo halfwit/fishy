@@ -219,6 +219,7 @@ data.FishIndex = T {
         [4471] = "Bladefish:408",
         [4475] = "Sea Zombie:715",
         [4479] = "Bhefhel Marlin:307",
+        [4480] = "Gugru Tuna:102",
         [5128] = "Cone Calimary:169",
         [12316] = "Fish Scale Shield:399",
         [12522] = "Rusty Cap:98",
